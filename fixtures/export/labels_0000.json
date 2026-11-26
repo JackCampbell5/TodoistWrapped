@@ -1,0 +1,7 @@
+[
+{"color":"teal","id":"L0","is_deleted":false,"is_favorite":false,"item_order":0,"name":"errand","order_key":"a"},
+{"color":"grape","id":"L1","is_deleted":false,"is_favorite":false,"item_order":1,"name":"deep-work","order_key":"a"},
+{"color":"lime_green","id":"L2","is_deleted":false,"is_favorite":false,"item_order":2,"name":"quick","order_key":"a"},
+{"color":"lime_green","id":"L3","is_deleted":false,"is_favorite":false,"item_order":3,"name":"phone","order_key":"a"},
+{"color":"red","id":"L4","is_deleted":false,"is_favorite":false,"item_order":4,"name":"outside","order_key":"a"}
+]

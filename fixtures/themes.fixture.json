@@ -1,0 +1,9 @@
+{
+  "themes": {
+    "Space Program": ["Moon Base Renovation", "Time Machine Repair"],
+    "Garden": ["Cactus Care"],
+    "Side Hustles": ["Llama Grooming Co", "Volcano Lair Gift Shop"]
+  },
+  "projectThemes": { "Intergalactic Book Club": "Clubs" },
+  "milestoneKeywords": ["submit", "apply", "interview", "rehearse"]
+}

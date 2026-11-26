@@ -1,0 +1,20 @@
+{
+  "activated_user": true,
+  "daily_goal": 5,
+  "weekly_goal": 25,
+  "id": "1000001",
+  "inbox_project_id": "PINBOX",
+  "is_premium": true,
+  "joined_at": "2024-03-10T14:00:00.000000Z",
+  "karma": 4242,
+  "karma_trend": "up",
+  "lang": "en",
+  "start_day": 1,
+  "tz_info": {
+    "gmt_string": "-05:00",
+    "hours": -5,
+    "is_dst": 0,
+    "minutes": 0,
+    "timezone": "US/Eastern"
+  }
+}

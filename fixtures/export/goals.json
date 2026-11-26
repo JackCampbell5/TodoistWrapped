@@ -1,0 +1,10 @@
+{
+  "daily_goal": 5,
+  "ignore_days": [
+    6,
+    7
+  ],
+  "user": 1000001,
+  "vacation_mode": 0,
+  "weekly_goal": 25
+}
