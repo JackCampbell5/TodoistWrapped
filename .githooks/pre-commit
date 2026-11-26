@@ -4,7 +4,7 @@
 # Fails the commit if any staged file:
 #   1. lives in a personal-data path (data/raw, data/cache, src/generated, public/data,
 #      config/*.local.json, .env*, *.zip)
-#   2. looks like a Todoist export data file and is outside fixtures/
+#   2. looks like a Todoist export file (by name or content) and is outside fixtures/
 #   3. contains a 40-char hex string (Todoist API token format) or a Bearer token
 #      (lockfiles excepted)
 
@@ -14,11 +14,12 @@ report() {
   fail=1
 }
 
-# Export-detection markers. Data files (json/csv/ndjson/txt) outside fixtures/ that
-# contain at least $EXPORT_MIN of these are treated as Todoist export data.
-# TODO: refine after inspecting data/raw/ (real top-level keys and file names).
-EXPORT_MARKERS='"sync_token" "child_order" "day_order" "project_id" "section_id" "checked" "is_deleted" "completed_at" "added_at" "karma" "inbox_project" "responsible_uid" "v2_id"'
+# Export-detection markers, taken from the real Todoist support export (inspected 2026-11).
+# Data files (json/csv/ndjson/txt) outside fixtures/ containing >= EXPORT_MIN markers are blocked.
+EXPORT_MARKERS='"event_type" "object_type" "parent_project_id" "parent_item_id" "extra_data" "complete_count" "postpone_count" "in_history" "date_completed" "date_added" "child_order" "is_user_inbox" "inbox_project_id" "karma_trend" "posted_uid" "file_attachment" "sync_token"'
 EXPORT_MIN=3
+# Export file names: activities_0000.json, items_0000.json, notes_0000.json, user.json, ...
+EXPORT_NAME_RE='^(activities|items|notes|projects|labels|filters|reminders|locations|authorizations|sections|collaborators)_[0-9]{4}\.json$|^(user|karma|goals)\.json$'
 
 staged=$(git -c core.quotePath=false diff --cached --name-only --diff-filter=ACMR)
 [ -z "$staged" ] && exit 0
@@ -54,6 +55,9 @@ for path in $staged; do
       case "$lower" in
         *todoist*export*|*export*todoist*) report "file name looks like a Todoist export: $path" ;;
       esac
+      if printf '%s' "$base" | grep -qE "$EXPORT_NAME_RE"; then
+        report "file name matches a Todoist export file: $path"
+      fi
       case "$lower" in
         *.json|*.csv|*.ndjson|*.jsonl|*.txt)
           content=$(git show ":$path" 2>/dev/null)
