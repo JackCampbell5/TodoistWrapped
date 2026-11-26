@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Inter Display", "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --color-ink: #0b0b12;
+  --color-panel: #14141f;
+  --color-panel-2: #1c1c2a;
+  --color-line: #2a2a3b;
+  --color-muted: #9b9bb0;
+  --color-soft: #c9c9d8;
+  --color-safe: #3ee0a8;
+}
+
+:root {
+  color-scheme: dark;
+  background: var(--color-ink);
+  color: #f3f3f8;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body, #root { min-height: 100%; }
+body { margin: 0; }
+
+.tabular { font-variant-numeric: tabular-nums; }
+.display { font-family: var(--font-display); letter-spacing: -0.035em; line-height: 0.92; }
+
+:focus-visible { outline: 3px solid #fff; outline-offset: 3px; border-radius: 6px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+.sr-only-focusable:not(:focus) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* Recharts: recessive axes and grid */
+.recharts-cartesian-axis-tick-value { fill: #9b9bb0; font-size: 11px; }
+.recharts-cartesian-grid line { stroke: #2a2a3b; }
+.recharts-tooltip-cursor { fill: rgba(255,255,255,0.06); }
