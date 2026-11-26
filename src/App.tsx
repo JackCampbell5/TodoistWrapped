@@ -31,7 +31,7 @@ export default function App() {
   const valid = route.view !== 'landing' && index.years.some((y) => y.key === route.year);
   return (
     <Suspense fallback={<div className="grid min-h-screen place-items-center text-muted">Loading…</div>}>
-      {route.view === 'story' && valid ? <Story year={route.year} start={Number(route.section) || 0} /> : route.view === 'explore' && valid ? <Explore year={route.year} /> : <Landing />}
+      {route.view === 'story' && valid ? <Story year={route.year} start={Number(route.section) || 0} /> : route.view === 'explore' && valid ? <Explore year={route.year} section={route.section} /> : <Landing />}
     </Suspense>
   );
 }
