@@ -1,0 +1,9 @@
+{
+  "$comment": "Copy to config/themes.local.json (gitignored) and use your real project names or ids. Projects not listed fall back to their top-level parent project as the theme.",
+  "themes": {
+    "Space Program": ["Moon Base Renovation", "Rocket Garage"],
+    "Garden": ["Water the Cactus Club", "Greenhouse"],
+    "Life": ["Inbox", "Errands"]
+  },
+  "milestoneKeywords": ["submit", "apply", "interview", "rehearsal", "launch"]
+}

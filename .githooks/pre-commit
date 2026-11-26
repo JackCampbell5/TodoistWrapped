@@ -1,0 +1,95 @@
+#!/bin/sh
+# Pre-commit safety hook: blocks personal Todoist data and secrets.
+# Enable once per clone:  git config core.hooksPath .githooks
+# Fails the commit if any staged file:
+#   1. lives in a personal-data path (data/raw, data/cache, src/generated, public/data,
+#      config/*.local.json, .env*, *.zip)
+#   2. looks like a Todoist export data file and is outside fixtures/
+#   3. contains a 40-char hex string (Todoist API token format) or a Bearer token
+#      (lockfiles excepted)
+
+fail=0
+report() {
+  echo "pre-commit: BLOCKED $1" >&2
+  fail=1
+}
+
+# Export-detection markers. Data files (json/csv/ndjson/txt) outside fixtures/ that
+# contain at least $EXPORT_MIN of these are treated as Todoist export data.
+# TODO: refine after inspecting data/raw/ (real top-level keys and file names).
+EXPORT_MARKERS='"sync_token" "child_order" "day_order" "project_id" "section_id" "checked" "is_deleted" "completed_at" "added_at" "karma" "inbox_project" "responsible_uid" "v2_id"'
+EXPORT_MIN=3
+
+staged=$(git -c core.quotePath=false diff --cached --name-only --diff-filter=ACMR)
+[ -z "$staged" ] && exit 0
+
+OLDIFS=$IFS
+IFS='
+'
+for path in $staged; do
+  IFS=$OLDIFS
+  base=$(basename "$path")
+  lower=$(printf '%s' "$path" | tr '[:upper:]' '[:lower:]')
+
+  # 1. Forbidden paths
+  case "$path" in
+    data/raw/*|*/data/raw/*)             report "personal data path: $path" ;;
+    data/cache/*|*/data/cache/*)         report "personal data path: $path" ;;
+    src/generated/*|*/src/generated/*)   report "generated personal stats: $path" ;;
+    public/data/*|*/public/data/*)       report "personal data path: $path" ;;
+    config/*.local.json)                 report "personal config: $path" ;;
+  esac
+  case "$base" in
+    .env.example) ;;
+    .env|.env.*)                         report "env file: $path" ;;
+  esac
+  case "$lower" in
+    *.zip)                               report "zip archive: $path" ;;
+  esac
+
+  # 2. Looks like a Todoist export (outside fixtures/)
+  case "$path" in
+    fixtures/*) ;;
+    *)
+      case "$lower" in
+        *todoist*export*|*export*todoist*) report "file name looks like a Todoist export: $path" ;;
+      esac
+      case "$lower" in
+        *.json|*.csv|*.ndjson|*.jsonl|*.txt)
+          content=$(git show ":$path" 2>/dev/null)
+          hits=0
+          for m in $EXPORT_MARKERS; do
+            if printf '%s' "$content" | grep -qF -- "$m"; then
+              hits=$((hits + 1))
+            fi
+          done
+          if [ "$hits" -ge "$EXPORT_MIN" ]; then
+            report "content looks like Todoist export data ($hits markers): $path"
+          fi
+          ;;
+      esac
+      ;;
+  esac
+
+  # 3. Secrets (skip lockfiles)
+  case "$base" in
+    package-lock.json|yarn.lock|pnpm-lock.yaml|npm-shrinkwrap.json|bun.lockb) ;;
+    *)
+      if git show ":$path" 2>/dev/null | grep -IqE '(^|[^0-9A-Fa-f])[0-9A-Fa-f]{40}([^0-9A-Fa-f]|$)'; then
+        report "40-char hex string (possible API token): $path"
+      fi
+      if git show ":$path" 2>/dev/null | grep -IqE 'Bearer[[:space:]]+[A-Za-z0-9._~+/=-]{8,}'; then
+        report "Bearer token: $path"
+      fi
+      ;;
+  esac
+  IFS='
+'
+done
+IFS=$OLDIFS
+
+if [ "$fail" -ne 0 ]; then
+  echo "pre-commit: commit aborted. Unstage the files above (git restore --staged <file>)." >&2
+  exit 1
+fi
+exit 0
