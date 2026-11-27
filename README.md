@@ -1,4 +1,4 @@
-# My Done List
+# Jack's Todoist Wrapped
 
 A private, local year-in-review of everything you finished in Todoist. It's built entirely from your personal-data export, with no network calls and no account connection.
 

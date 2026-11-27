@@ -54,7 +54,7 @@ export function Header({ right }: { right?: ReactNode }) {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
         <button type="button" onClick={() => go({ view: 'landing' })} className="flex items-center gap-2 text-left">
           <Logo />
-          <span className="text-lg font-black tracking-tight">My Done List</span>
+          <span className="text-lg font-black tracking-tight">Jack's Todoist Wrapped</span>
         </button>
         <div className="flex items-center gap-2">
           {right}

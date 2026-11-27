@@ -30,12 +30,12 @@ export function buildSlides(s: YearStats, n: Names, prev: YearStats | null): Sli
 
   // 1. intro
   out.push({
-    id: 'intro', palette: P[0], alt: `My Done List, ${period}.`,
+    id: 'intro', palette: P[0], alt: `Jack's Todoist Wrapped, ${period}.`,
     el: (
       <div className="flex h-full flex-col justify-between">
         <Rise><Logo size={44} /></Rise>
         <div>
-          <Kicker>My Done List</Kicker>
+          <Kicker>Jack's Todoist Wrapped</Kicker>
           <Big i={1}>{isAll ? 'All of it.' : s.label}</Big>
           <Sub>Here’s everything you got done{isAll ? ' since day one' : ''}. Tap to begin.</Sub>
         </div>
@@ -519,7 +519,7 @@ function Summary({ s, n }: { s: YearStats; n: Names }) {
   return (
     <div className="flex h-full flex-col justify-between gap-3">
       <Rise className="flex items-center justify-between">
-        <span className="flex items-center gap-2 font-black"><Logo size={26} /> My Done List</span>
+        <span className="flex items-center gap-2 font-black"><Logo size={26} /> Jack's Todoist Wrapped</span>
         <span className={`rounded-full px-2.5 py-1 text-[11px] font-black uppercase tracking-wider ${n.safe ? 'bg-safe text-ink' : 'bg-white/10 text-soft'}`}>
           Share-safe {n.safe ? 'on' : 'off'}
         </span>
